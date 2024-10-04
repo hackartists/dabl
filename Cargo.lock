@@ -883,9 +883,13 @@ dependencies = [
  "dioxus-logger",
  "easy-dynamodb",
  "getrandom",
+ "js-sys",
+ "polygonical",
  "rand",
  "serde",
  "slog",
+ "tokio",
+ "wasm-bindgen-futures",
  "web-sys",
 ]
 
@@ -1483,6 +1487,15 @@ name = "fastrand"
 version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8c02a5121d4ea3eb16a80748c74f5549a5665e4c21333c6098f283870fbdea6"
+
+[[package]]
+name = "float-cmp"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98de4bbd547a563b716d8dfa9aad1cb19bfab00f4fa09a6a4ed21dbcf44ce9c4"
+dependencies = [
+ "num-traits",
+]
 
 [[package]]
 name = "fnv"
@@ -2686,6 +2699,15 @@ name = "pkg-config"
 version = "0.3.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "953ec861398dccce10c670dfeaf3ec4911ca479e9c02154b3a215178c5f566f2"
+
+[[package]]
+name = "polygonical"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a7ea54a5aac399455538901e57d767125569eee6bcaee1323b32e02e22b2ac86"
+dependencies = [
+ "float-cmp",
+]
 
 [[package]]
 name = "powerfmt"

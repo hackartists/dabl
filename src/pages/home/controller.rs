@@ -1,34 +1,15 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_logger::tracing;
-
-use crate::{
-    apis::home::{get_home, GetHomeResponse},
-    models::{
-        feed::Feed, highlight_service::HighlightService, models::Member, service::Service,
-        slogan::Slogan,
-    },
-};
+use polygonical::point::Point;
 
 #[derive(Debug, Clone, Copy, Default)]
-pub(super) struct Controller {
-    // pub slogan: Signal<Option<Slogan>>,
-    pub loaded: Signal<bool>,
-    // pub services: Signal<Vec<Service>>,
-    // pub highlight_service: Signal<Option<HighlightService>>,
-    // pub feeds: Signal<Vec<Feed>>,
-    // pub members: Signal<Vec<Member>>,
-    pub result: Signal<Option<GetHomeResponse>>,
-}
+pub(super) struct Controller {}
 
 impl Controller {
     pub fn init() -> Result<Self, RenderError> {
-        let mut ctrl = Self::default();
+        let ctrl = Self::default();
         use_context_provider(|| ctrl);
-
-        let result = get_home();
-        ctrl.result.set(Some(result.clone()));
-        ctrl.loaded.set(true);
 
         tracing::debug!("Home data loaded");
 
@@ -39,27 +20,21 @@ impl Controller {
         use_context()
     }
 
-    pub fn is_loaded(&self) -> bool {
-        (self.loaded)()
-    }
+    pub fn points_by_polygon(num_points: usize, center: (f32, f32), radius: f32) -> Vec<Point> {
+        if num_points == 0 {
+            return vec![];
+        }
+        let center = Point::new(center.0, center.1);
+        let num_points = if num_points < 3 { 3 } else { num_points };
 
-    pub fn slogan(&self) -> Slogan {
-        (self.result)().unwrap_or_default().slogan
-    }
-
-    pub fn services(&self) -> Vec<Service> {
-        (self.result)().unwrap_or_default().services
-    }
-
-    pub fn highlight_service(&self) -> HighlightService {
-        (self.result)().unwrap_or_default().highlight_service
-    }
-
-    pub fn feeds(&self) -> Vec<Feed> {
-        (self.result)().unwrap_or_default().feeds
-    }
-
-    pub fn members(&self) -> Vec<Member> {
-        (self.result)().unwrap_or_default().members
+        (0..360)
+            .step_by(360 / num_points)
+            .map(|a| {
+                Point::new(radius, 0.0)
+                    .rotate((a as f64).to_radians())
+                    .translate(&center)
+            })
+            .collect::<Vec<_>>()[..num_points - 1]
+            .to_vec()
     }
 }
