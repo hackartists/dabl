@@ -1,20 +1,22 @@
 VERSION ?= v0.1.0
 COMMIT ?= $(shell git rev-parse --short HEAD)
 ENV ?= local
-SERVICE ?= homepage
+SERVICE ?= $(shell basename `git rev-parse --show-toplevel`)
+BASE_DOMAIN ?= biyard.co
+
 
 ifeq ("$(ENV)","prod")
 	LOG_LEVEL ?= error
-	DOMAIN ?= biyard.co
+	DOMAIN ?= $(SERVICE).$(BASE_DOMAIN)
 	REDIRECT_URI ?= https://$(DOMAIN)
 	AWS_DYNAMODB_TABLE ?= $(SERVICE)-prod
 endif
 
 ifeq ("$(ENV)","dev")
-	DOMAIN ?= dev.biyard.co
 	REDIRECT_URI ?= https://$(DOMAIN)
 endif
 
+DOMAIN ?= $(SERVICE).$(ENV).$(BASE_DOMAIN)
 LOG_LEVEL ?= debug
 REDIRECT_URI ?= http://localhost:8080
 AWS_ACCESS_KEY_ID ?= $(shell aws configure get aws_access_key_id $(AWS_FLAG))
@@ -22,8 +24,10 @@ AWS_SECRET_ACCESS_KEY ?= $(shell aws configure get aws_secret_access_key $(AWS_F
 AWS_REGION ?= $(shell aws configure get region)
 AWS_DYNAMODB_TABLE ?= $(SERVICE)-dev
 CDN_ID ?= $(shell aws cloudfront list-distributions --query "DistributionList.Items[*].{id:Id,test:AliasICPRecordals[?CNAME=='$(DOMAIN)']}" --output json |jq '. | map(select(.test | length > 0))[0] | .id' | tr -d \")
+ACM_ID ?= $(shell aws acm list-certificates --query "CertificateSummaryList[*].{id:CertificateArn,domains:SubjectAlternativeNameSummaries}[?contains(domains,'dabl.biyard.co')].id" --output text --region us-east-1)
+HOSTED_ZONE_ID ?= $(shell basename `aws route53 list-hosted-zones-by-name --dns-name biyard.co --query "HostedZones[0].Id" --output text`)
 
-BUILD_ENV ?= LOG_LEVEL=$(LOG_LEVEL) REDIRECT_URI=$(REDIRECT_URI) AWS_DYNAMODB_TABLE=$(AWS_DYNAMODB_TABLE) VERSION=$(VERSION) COMMIT=$(COMMIT) ENV=$(ENV) SERVICE=$(SERVICE) TABLE_NAME=$(AWS_DYNAMODB_TABLE) DOMAIN=$(DOMAIN) AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) AWS_REGION=$(AWS_REGION)
+BUILD_ENV ?= LOG_LEVEL=$(LOG_LEVEL) REDIRECT_URI=$(REDIRECT_URI) AWS_DYNAMODB_TABLE=$(AWS_DYNAMODB_TABLE) VERSION=$(VERSION) COMMIT=$(COMMIT) ENV=$(ENV) SERVICE=$(SERVICE) TABLE_NAME=$(AWS_DYNAMODB_TABLE) DOMAIN=$(DOMAIN) AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) AWS_REGION=$(AWS_REGION) CDN_ID=$(CDN_ID) ACM_ID=$(ACM_ID) HOSTED_ZONE_ID=$(HOSTED_ZONE_ID)
 
 .PHONY: setup run
 setup:
