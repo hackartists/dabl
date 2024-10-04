@@ -875,6 +875,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "dabl"
+version = "0.1.0"
+dependencies = [
+ "dioxus",
+ "dioxus-aws",
+ "dioxus-logger",
+ "easy-dynamodb",
+ "getrandom",
+ "rand",
+ "serde",
+ "slog",
+ "web-sys",
+]
+
+[[package]]
 name = "darling"
 version = "0.20.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1912,21 +1927,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3d1354bf6b7235cb4a0576c2619fd4ed18183f689b12b006a0ee7329eeff9a5"
 dependencies = [
  "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "homepage"
-version = "0.1.0"
-dependencies = [
- "dioxus",
- "dioxus-aws",
- "dioxus-logger",
- "easy-dynamodb",
- "getrandom",
- "rand",
- "serde",
- "slog",
- "web-sys",
 ]
 
 [[package]]

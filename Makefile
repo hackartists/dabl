@@ -34,21 +34,21 @@ setup:
 	cargo install dioxus-cli --version 0.6.0-alpha.2
 	npm install -g aws-cdk tailwindcss
 
-run: assets/tailwind.css
+run: public/tailwind.css
 	$(BUILD_ENV) dx serve -i false
 
-build: clean assets/tailwind.css
+build: clean public/tailwind.css
 	$(BUILD_ENV) dx build --release
 
 run-server: build
 	dist/$(SERVICE)
 
-build-lambda: clean assets/tailwind.css
+build-lambda: clean public/tailwind.css
 	$(BUILD_ENV) dx build --release --platform fullstack --server-feature lambda
 	mv dist/$(SERVICE) dist/bootstrap
 
-assets/tailwind.css:
-	tailwindcss -i ./input.css -o ./assets/tailwind.css --minify
+public/tailwind.css:
+	tailwindcss -i ./input.css -o ./public/tailwind.css --minify
 
 .ONESHELL: cdk-build cdk-deploy fixtures/cdk/node_modules
 fixtures/cdk/node_modules:
@@ -65,16 +65,16 @@ cdk-deploy:
 	yes | $(BUILD_ENV) cdk deploy --require-approval never $(AWS_FLAG)
 
 clean:
-	rm -rf dist assets/tailwind.css
+	rm -rf dist public/tailwind.css
 
 dist/public/members:
-	cp -r assets/members dist/public
+	cp -r public/members dist/public
 
 dist/public/services:
-	cp -r assets/services dist/public
+	cp -r public/services dist/public
 
 dup-assets:
-	cp -r dist/public/*.css dist/public/*.avif dist/public/*.ico dist/public/assets/
+	cp -r dist/public/*.css dist/public/*.avif dist/public/*.ico dist/public/public/
 
 deploy: build-lambda cdk-build cdk-deploy dist/public/members dist/public/services dup-assets s3-sync
 

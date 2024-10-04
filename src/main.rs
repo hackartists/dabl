@@ -85,15 +85,15 @@ fn App() -> Element {
         head::Link {
             rel: "icon",
             r#type: "image/x-icon",
-            href: asset!("assets/favicon.ico"),
+            href: asset!("public/favicon.ico"),
         }
         head::Link {
             rel: "stylesheet",
-            href: asset!("assets/main.css")
+            href: asset!("public/main.css")
         }
         head::Link {
             rel: "stylesheet",
-            href: asset!("assets/tailwind.css")
+            href: asset!("public/tailwind.css")
         }
         load_tailwindcss {}
         Router::<Route> {}

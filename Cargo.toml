@@ -1,5 +1,5 @@
 [package]
-name = "homepage"
+name = "dabl"
 version = "0.1.0"
 authors = ["hackartists <hackartists@gmail.com>"]
 edition = "2021"
