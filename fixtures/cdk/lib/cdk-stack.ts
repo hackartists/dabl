@@ -21,10 +21,6 @@ export class CdkStack extends cdk.Stack {
     let acmId = process.env.ACM_ID || "";
     let hostedZoneId = process.env.HOSTED_ZONE_ID || "";
     let tableName = process.env.TABLE_NAME || "";
-    let vpcId = process.env.VPC_ID || "";
-    let securityGroupId = process.env.SECURITY_GROUP_ID || "";
-    let subnet1Id = process.env.SUBNET1_ID || "";
-    let subnet2Id = process.env.SUBNET2_ID || "";
 
     const assetsBucket = new s3.Bucket(this, "Bucket", {
       bucketName: domain,
@@ -47,17 +43,17 @@ export class CdkStack extends cdk.Stack {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
 
-    const vpc = ec2.Vpc.fromLookup(this, "VPC", {
-      vpcId,
-    });
-    const securityGroup = ec2.SecurityGroup.fromSecurityGroupId(
-      this,
-      "lambdaSecurityGroup",
-      securityGroupId,
-    );
+    // const vpc = ec2.Vpc.fromLookup(this, "VPC", {
+    //   vpcId,
+    // });
+    // const securityGroup = ec2.SecurityGroup.fromSecurityGroupId(
+    //   this,
+    //   "lambdaSecurityGroup",
+    //   securityGroupId,
+    // );
 
-    const subnet1 = ec2.Subnet.fromSubnetId(this, "subnet1", subnet1Id);
-    const subnet2 = ec2.Subnet.fromSubnetId(this, "subnet2", subnet2Id);
+    // const subnet1 = ec2.Subnet.fromSubnetId(this, "subnet1", subnet1Id);
+    // const subnet2 = ec2.Subnet.fromSubnetId(this, "subnet2", subnet2Id);
 
     const func = new lambda.Function(this, "Function", {
       runtime: lambda.Runtime.PROVIDED_AL2023,
@@ -67,13 +63,13 @@ export class CdkStack extends cdk.Stack {
         NO_COLOR: "true",
       },
       // NOTE: Connection for Redis
-      vpc,
-      securityGroups: [securityGroup],
-      memorySize: 512,
+      // vpc,
+      // securityGroups: [securityGroup],
+      memorySize: 128,
       timeout: cdk.Duration.seconds(10),
-      vpcSubnets: {
-        subnets: [subnet1, subnet2],
-      },
+      // vpcSubnets: {
+      //   subnets: [subnet1, subnet2],
+      // },
     });
 
     table.grantReadWriteData(func);

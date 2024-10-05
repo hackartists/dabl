@@ -1,10 +1,17 @@
 #![allow(non_snake_case)]
 
+use std::sync::Arc;
+
 use dioxus::prelude::*;
 use dioxus_logger::tracing;
 use web_sys::wasm_bindgen::JsValue;
 
-use crate::apis::{get_polling, Blockchain, Node};
+use crate::{
+    apis::nodes::{get_polling, Blockchain},
+    models::node::Node,
+};
+
+use super::node_service::NodeService;
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct PollingService {
@@ -15,12 +22,15 @@ impl PollingService {
     pub fn init() {
         let srv = Self::default();
         use_context_provider(|| srv);
+        let id = Arc::new(NodeService::use_service().get_id());
 
         use_coroutine(|_: UnboundedReceiver<Self>| async move {
             web_sys::console::log_1(&JsValue::from_str("starting coroutine"));
             let mut blockchain = srv.blockchain.to_owned();
+
             loop {
-                match get_polling().await {
+                let id = id.clone();
+                match get_polling(id.to_string()).await {
                     Ok(bc) => {
                         tracing::debug!("fetched");
                         blockchain.set(bc);

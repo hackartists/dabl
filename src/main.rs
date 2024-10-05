@@ -8,6 +8,7 @@ pub mod layouts {
     pub mod root_layout;
 }
 
+pub mod errors;
 pub mod services;
 
 pub mod components {

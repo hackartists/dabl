@@ -25,6 +25,10 @@ impl NodeService {
         use_context_provider(|| Self::default());
     }
 
+    pub fn get_id(&self) -> String {
+        (self.id)().clone()
+    }
+
     #[allow(dead_code)]
     pub fn use_service() -> Self {
         use_context()
