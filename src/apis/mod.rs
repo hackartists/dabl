@@ -1,5 +1,4 @@
-pub mod home;
-pub mod users;
+pub mod nodes;
 
 use dioxus::fullstack::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -34,11 +33,11 @@ pub struct Blockchain {
 #[server(endpoint = "/nodes", input=GetUrl, output=Json)]
 pub async fn get_polling() -> Result<Blockchain, ServerFnError> {
     Ok(Blockchain {
-        nodes: [0..10]
-            .iter()
+        nodes: (0..10)
+            .into_iter()
             .map(|e| Node {
-                id: format!("{}", e),
-                name: format!("node {}", e),
+                id: format!("{:?}", e),
+                name: format!("node {:?}", e),
             })
             .collect(),
     })

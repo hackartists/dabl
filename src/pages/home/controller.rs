@@ -20,12 +20,12 @@ impl Controller {
         use_context()
     }
 
-    pub fn points_by_polygon(num_points: usize, center: (f32, f32), radius: f32) -> Vec<Point> {
-        if num_points == 0 {
+    pub fn points_by_polygon(num: usize, center: (f32, f32), radius: f32) -> Vec<Point> {
+        if num == 0 {
             return vec![];
         }
         let center = Point::new(center.0, center.1);
-        let num_points = if num_points < 3 { 3 } else { num_points };
+        let num_points = if num < 3 { 3 } else { num };
 
         (0..360)
             .step_by(360 / num_points)
@@ -34,7 +34,7 @@ impl Controller {
                     .rotate((a as f64).to_radians())
                     .translate(&center)
             })
-            .collect::<Vec<_>>()[..num_points - 1]
+            .collect::<Vec<_>>()[..num]
             .to_vec()
     }
 }
