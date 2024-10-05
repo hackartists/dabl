@@ -11,7 +11,6 @@ pub mod layouts {
 pub mod services;
 
 pub mod components {
-    pub mod download_popup;
     pub mod feature_button;
     pub mod filled_button;
     pub mod icon_button;
@@ -36,7 +35,9 @@ pub mod models;
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{self, Level};
 use routes::Route;
-use services::{polling_service::PollingService, popup_service::PopupService};
+use services::{
+    node_service::NodeService, polling_service::PollingService, popup_service::PopupService,
+};
 
 fn main() {
     dioxus_logger::init(match option_env!("LOG_LEVEL") {
@@ -54,6 +55,7 @@ fn main() {
 }
 
 fn App() -> Element {
+    NodeService::init();
     PopupService::init();
     PollingService::init();
 

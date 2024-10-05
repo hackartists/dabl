@@ -7,9 +7,7 @@ use top_menu::TopMenu;
 pub mod footer;
 pub mod top_menu;
 
-use crate::{
-    components::download_popup::DownloadPopup, routes::Route, services::popup_service::PopupService,
-};
+use crate::{routes::Route, services::popup_service::PopupService};
 
 #[component]
 pub fn RootLayout() -> Element {
@@ -27,7 +25,6 @@ pub fn RootLayout() -> Element {
                     tracing::debug!("close popup");
                     popup.close();
                 },
-                DownloadPopup { }
             }
             TopMenu { }
             div {

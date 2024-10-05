@@ -3,6 +3,7 @@ use dioxus::prelude::{
     server_fn::codec::{GetUrl, Json, PostUrl},
     *,
 };
+use dioxus_logger::tracing;
 use serde::{Deserialize, Serialize};
 
 use crate::models::node::Node;
